@@ -5,7 +5,7 @@
 
 <h3>Productos</h3>
 
-<a class="btn btn-success" href="productos/nuevo">Agragar Producto</a>
+<a class="btn btn-success" href="productos/nuevo">Agregar Producto</a>
 
 @if (_productos == null)
 {
@@ -69,7 +69,7 @@ else
 
     private void Editar(int id)
     {
-        _navigator.NavigateTo($"/productos/editar/{id}");
+        _navigator.NavigateTo($"/productos/editar/{id}");   
     }
 
 }
