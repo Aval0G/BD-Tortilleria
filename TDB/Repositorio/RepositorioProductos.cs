@@ -6,16 +6,25 @@ namespace TDB.Repositorio
     public class RepositorioProductos : IRepositorioProductos
     {
         private readonly TortilleriaDBContext _context;
+        private readonly RepositorioInventario _repositorioInventario;
 
-        public RepositorioProductos(TortilleriaDBContext context)
+        public RepositorioProductos(TortilleriaDBContext context, RepositorioInventario repositorioInventario)
         {
             _context = context;
+            _repositorioInventario = repositorioInventario;
         }
 
         public async Task<Producto> Add(Producto producto)
         {
             _context.Producto.Add(producto);
             await _context.SaveChangesAsync();
+
+            await _repositorioInventario.Add(new Inventario
+            {
+                ProductoId = producto.Id,
+                Cantidad = 0 
+            });
+
             return producto;
         }
 
@@ -27,6 +36,7 @@ namespace TDB.Repositorio
                 _context.Producto.Remove(producto);
                 await _context.SaveChangesAsync();
             }
+            await _repositorioInventario.Delete(id);
         }
 
         public async Task Update(Producto producto)
