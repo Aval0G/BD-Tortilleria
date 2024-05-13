@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TDB.Modelos;
 
@@ -10,9 +11,11 @@ using TDB.Modelos;
 namespace TDB.Migrations
 {
     [DbContext(typeof(TortilleriaDBContext))]
-    partial class TortilleriaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240513173728_Inventario")]
+    partial class Inventario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
