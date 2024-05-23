@@ -9,11 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<TortilleriaDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IRepositorioProductos, RepositorioProductos>();
+builder.Services.AddScoped<IRepositorioProveedores, RepositorioProveedores>();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddScoped<RepositorioInventario>();
+builder.Services.AddScoped<RepositorioProductos>();
+builder.Services.AddScoped<RepositorioProveedores>();
+
 
 var app = builder.Build();
 

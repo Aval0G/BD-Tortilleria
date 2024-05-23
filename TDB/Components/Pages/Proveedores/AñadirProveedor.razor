@@ -1,5 +1,47 @@
-﻿<h3>AñadirProveedor</h3>
+﻿@page "/proveedores/nuevo"
+@rendermode InteractiveServer
+@inject NavigationManager _navigator;
+@inject IRepositorioProveedores _repositorio;
+
+<h3>AñadirProveedor</h3>
+
+<EditForm Model="@proveedor" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <InputText class="form-control" id="nombre" @bind-Value="proveedor.Nombre" />
+        <ValidationMessage For="@(() => proveedor.Nombre)" />
+    </div>
+
+<div class="form-group">
+    <label for="telefono">Teléfono</label>
+    <InputText class="form-control" id="telefono" @bind-Value="proveedor.Telefono" />
+    <ValidationMessage For="@(() => proveedor.Telefono)" />
+</div>
+
+<button type="submit" class="btn btn-primary">Guardar</button>
+</EditForm>
+
 
 @code {
+private Proveedores proveedor = new Proveedores();
+
+    private async Task Guardar()
+    {
+        if (editContext.Validate())
+        {
+            await _repositorio.Add(proveedor);
+            _navigator.NavigateTo("/proveedores");
+        }
+    }
+
+    private EditContext editContext;
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(proveedor);
+    }
 
 }

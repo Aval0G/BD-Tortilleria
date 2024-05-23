@@ -1,5 +1,68 @@
-﻿<h3>InventarioIndex</h3>
+﻿    @page "/inventario"
+    @rendermode InteractiveServer
+    @inject NavigationManager _navigator;
+    @inject RepositorioInventario _repositorio;
 
-@code {
+    <h3>InventarioIndex</h3>
 
-}
+    @if (_inventarios == null)
+    {
+        <p>Cargando...</p>
+    }
+
+    else if (_inventarios.Count == 0)
+    {
+        <p>No hay inventarios</p>
+    }
+
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id Inventario</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Inventario inventario in _inventarios)
+
+                {
+                    <tr>
+                        <td>@inventario.Id</td>
+                        <td>@inventario.ProductoId</td>
+                        <td>@inventario.Cantidad</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="()=>Editar(inventario.Id)">Editar</button>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    }
+
+    @code {
+
+        private List<Inventario>? _inventarios;
+
+        protected override async Task OnInitializedAsync()
+        {
+            _inventarios = await _repositorio.GetAll();
+        }
+
+        private void Editar(int id)
+        {
+            _navigator.NavigateTo($"inventario/editar/{id}");
+        }
+
+        private async void Eliminar(Inventario inventario)
+        {
+            await _repositorio.Delete(inventario.Id);
+            _inventarios!.Remove(inventario);
+            StateHasChanged();
+        }
+
+    }

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace TDB.Modelos
-{
+{ 
     public class Producto
     {
         [Key]

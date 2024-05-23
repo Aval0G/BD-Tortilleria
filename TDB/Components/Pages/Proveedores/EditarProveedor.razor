@@ -1,5 +1,57 @@
-﻿<h3>EditarProveedor</h3>
+﻿@page "/proveedores/editar/{id:int}"
+@rendermode InteractiveServer
+@inject NavigationManager _navigator
+@inject RepositorioProveedores _repositorio
+
+<h3>Editar Proveedor</h3>
+
+<EditForm Model="proveedor" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <InputText class="form-control" id="nombre" @bind-Value="proveedor.Nombre" />
+        <ValidationMessage For="@(() => proveedor.Nombre)" />
+    </div>
+
+    <div class="form-group">
+        <label for="telefono">Teléfono</label>
+        <InputText class="form-control" id="telefono" @bind-Value="proveedor.Telefono" />
+        <ValidationMessage For="@(() => proveedor.Telefono)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</EditForm>
 
 @code {
+    [Parameter]
+    public int id { get; set; }
 
+    private Proveedores proveedor = new Proveedores();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            proveedor = await _repositorio.Get(id);
+        }
+        catch (Exception ex)
+        {
+            _navigator.NavigateTo("/error"); 
+        }
+    }
+
+    private async Task Guardar()
+    {
+        try
+        {
+            await _repositorio.Update(proveedor);
+            _navigator.NavigateTo("/proveedores");
+        }
+        catch (Exception ex)
+        {
+            _navigator.NavigateTo("/error");
+        }
+    }
 }

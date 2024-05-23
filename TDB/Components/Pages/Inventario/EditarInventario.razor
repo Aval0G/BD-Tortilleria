@@ -1,5 +1,48 @@
-﻿<h3>ModificarInventario</h3>
+﻿@page "/inventario/editar/{id}"
+@rendermode InteractiveServer
+@inject NavigationManager _navigator;
+@inject RepositorioInventario _repositorio;
+
+<h3>Editar Inventario</h3>
+
+<EditForm Model="@inventario" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="productoId">Producto</label>
+        <InputNumber class="form-control" id="productoId" @bind-Value="inventario.ProductoId" />
+        <ValidationMessage For="@(() => inventario.ProductoId)" />
+    </div>
+    <div class="form-group">
+        <label for="cantidad">Cantidad</label>
+        <InputNumber class="form-control" id="cantidad" @bind-Value="inventario.Cantidad" />
+        <ValidationMessage For="@(() => inventario.Cantidad)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</EditForm>
 
 @code {
-
+private EditContext _editContext;
+    
+        [Parameter]
+        public string id { get; set; }
+    
+        private Inventario inventario = new Inventario();
+    
+        protected override async Task OnInitializedAsync()
+        {
+            inventario = await _repositorio.Get(int.Parse(id));
+            _editContext = new EditContext(inventario);
+        }
+    
+        private async Task Guardar()
+        {
+            if (_editContext.Validate())
+            {
+                await _repositorio.Update(inventario);
+                _navigator.NavigateTo("/inventario");
+            }
+        }
 }
