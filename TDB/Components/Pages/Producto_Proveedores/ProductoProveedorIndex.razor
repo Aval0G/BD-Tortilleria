@@ -2,6 +2,8 @@
 @rendermode InteractiveServer
 @inject NavigationManager _navigator;
 @inject RepositorioProducto_Proveedor _repositorio;
+@inject RepositorioProductos _repositorioProductos;
+@inject RepositorioProveedores _repositorioProveedores;
 
 
 <h3>Relacion Producto Proveedor Index</h3>
@@ -35,8 +37,8 @@ else
              {
                 <tr>
                     <td>@producto_Proveedor.Id</td>
-                    <td>@producto_Proveedor.ProveedorID</td>
-                    <td>@producto_Proveedor.ProductoId</td>
+                    <td>@ObtenerNombreProveedor(producto_Proveedor.ProveedorID)</td>
+                    <td>@ObtenerNombreProducto(producto_Proveedor.ProductoId)</td>
                     <td>
                         <button class="btn btn-danger" @onclick="()=>Eliminar(producto_Proveedor)">Eliminar</button>
                     </td>
@@ -48,10 +50,36 @@ else
 @code {
 
     List<Producto_Proveedor>? _proveedores_producto;
+    List<Producto>? _productos;
+    List<Proveedores>? _proveedores;
 
     protected override async Task OnInitializedAsync()
     {
         _proveedores_producto = await _repositorio.GetAll();
+        _productos = await _repositorioProductos.GetAll();
+        _proveedores = await _repositorioProveedores.GetAll();
+    }
+
+    private string ObtenerNombreProducto(int id)
+    {
+        if (_productos == null)
+        {
+            return "";
+        }
+
+        var producto = _productos.FirstOrDefault(p => p.Id == id);
+        return producto?.Nombre ?? "";
+    }
+
+private string ObtenerNombreProveedor(int id)
+    {
+        if (_proveedores == null)
+        {
+            return "";
+        }
+
+        var proveedor = _proveedores.FirstOrDefault(p => p.Id == id);
+        return proveedor?.Nombre ?? "";
     }
 
     private void Añadir()

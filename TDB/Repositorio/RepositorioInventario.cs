@@ -41,7 +41,7 @@ namespace TDB.Repositorio
 
         public async Task<Inventario?> Get(int id)
         {
-            return await _context.Inventario.FindAsync(id);
+            return await _context.Inventario.Include(p=>p.Producto).FirstAsync(i => i.Id == id);
         }
 
         public async Task<List<Inventario>> GetAll()
