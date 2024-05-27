@@ -1,0 +1,74 @@
+﻿@page "/proveedoresproducto/nuevo"
+@rendermode InteractiveServer
+@inject NavigationManager _navigator;
+@inject RepositorioProducto_Proveedor _repositorio;
+@inject RepositorioProductos _repositorioProductos;
+@inject RepositorioProveedores _repositorioProveedores;
+
+<h3>Añadir Producto Proveedor</h3>
+
+<EditForm Model="@productoproveedor" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="producto">Producto</label>
+        <InputSelect class="form-control" id="producto" @bind-Value="productoproveedor.ProductoId">
+            <option value="">Selecciona un producto</option>
+            @if (productos != null)
+            {
+                @foreach (var producto in productos)
+                {
+                    <option value="@producto.Id">@producto.Nombre</option>
+                }
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => productoproveedor.ProductoId)" />
+    </div>
+    <div class="form-group">
+        <label for="proveedor">Proveedor</label>
+        <InputSelect class="form-control" id="proveedor" @bind-Value="productoproveedor.ProveedorID">
+            <option value="">Selecciona un proveedor</option>
+            @if (proveedores != null)
+            {
+                @foreach (var proveedor in proveedores)
+                {
+                    <option value="@proveedor.Id">@proveedor.Nombre</option>
+                }
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => productoproveedor.ProveedorID)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</EditForm>
+
+@code {
+    private Producto_Proveedor productoproveedor = new Producto_Proveedor
+        {
+            ProductoId = 0, ProveedorID = 0 
+        };
+    private List<Producto>? productos;
+    private List<Proveedores>? proveedores;
+
+    private async Task Guardar()
+    {
+        try
+        {
+            await _repositorio.Add(productoproveedor);
+            _navigator.NavigateTo("/proveedoresproducto");
+        }
+        catch (Exception)
+        {
+            _navigator.NavigateTo("/error");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        productos = await _repositorioProductos.GetAll();
+        proveedores = await _repositorioProveedores.GetAll();
+        Console.WriteLine(productos);
+        Console.WriteLine(proveedores);
+    }
+}

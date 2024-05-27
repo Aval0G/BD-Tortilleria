@@ -24,7 +24,6 @@
 </EditForm>
 
 @code {
-private EditContext _editContext;
     
         [Parameter]
         public string id { get; set; }
@@ -33,16 +32,26 @@ private EditContext _editContext;
     
         protected override async Task OnInitializedAsync()
         {
-            inventario = await _repositorio.Get(int.Parse(id));
-            _editContext = new EditContext(inventario);
+            try
+            {
+                inventario = await _repositorio.Get(int.Parse(id));
+            }
+            catch (Exception)
+            {
+                _navigator.NavigateTo("/error");
+            }
         }
     
         private async Task Guardar()
         {
-            if (_editContext.Validate())
+            try
             {
                 await _repositorio.Update(inventario);
                 _navigator.NavigateTo("/inventario");
+            }
+            catch (Exception)
+            {
+                _navigator.NavigateTo("/error");
             }
         }
 }

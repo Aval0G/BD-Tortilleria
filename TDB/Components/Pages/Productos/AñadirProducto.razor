@@ -38,17 +38,14 @@
 
     private async Task Guardar()
     {
-        if (editContext.Validate())
+        try
         {
             await _repositorio.Add(producto);
             _navigator.NavigateTo("/productos");
         }
-    }
-
-    private EditContext editContext;
-
-    protected override void OnInitialized()
-    {
-        editContext = new EditContext(producto);
+        catch (Exception)
+        {
+            _navigator.NavigateTo("/error");
+        }
     }
 }

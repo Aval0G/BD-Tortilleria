@@ -69,6 +69,7 @@ private List<Proveedores>? _proveedores;
     {
         await _repositorio.Delete(proveedor.Id);
         _proveedores!.Remove(proveedor);
+        StateHasChanged();
     }
 
 }

@@ -1,0 +1,73 @@
+﻿@page "/proveedoresproducto"
+@rendermode InteractiveServer
+@inject NavigationManager _navigator;
+@inject RepositorioProducto_Proveedor _repositorio;
+
+
+<h3>Relacion Producto Proveedor Index</h3>
+
+<button class="btn btn-primary" @onclick="Añadir">Añadir</button>
+
+@if (_proveedores_producto == null)
+{
+    <p>Cargando...</p>
+}
+
+else if (_proveedores_producto.Count == 0)
+{
+    <p>No hay proveedores</p>
+}
+
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Id Proveedor</th>
+                <th>Id Producto</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (Producto_Proveedor producto_Proveedor in _proveedores_producto)
+             {
+                <tr>
+                    <td>@producto_Proveedor.Id</td>
+                    <td>@producto_Proveedor.ProveedorID</td>
+                    <td>@producto_Proveedor.ProductoId</td>
+                    <td>
+                        <button class="btn btn-danger" @onclick="()=>Eliminar(producto_Proveedor)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+
+    List<Producto_Proveedor>? _proveedores_producto;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _proveedores_producto = await _repositorio.GetAll();
+    }
+
+    private void Añadir()
+    {
+        _navigator.NavigateTo("/proveedoresproducto/nuevo");
+    }
+
+    private void Editar(int id)
+    {
+        _navigator.NavigateTo($"/proveedoresproducto/editar/{id}");
+    }
+
+    async private void Eliminar(Producto_Proveedor proveedor)
+    {
+        await _repositorio.Delete(proveedor.Id);
+        _proveedores_producto!.Remove(proveedor);
+        StateHasChanged();
+    }
+}

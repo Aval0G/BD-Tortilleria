@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<TortilleriaDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IRepositorioProductos, RepositorioProductos>();
 builder.Services.AddScoped<IRepositorioProveedores, RepositorioProveedores>();
+builder.Services.AddScoped<IRepositorioProducto_Proveedor, RepositorioProducto_Proveedor>();{
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
@@ -17,6 +18,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<RepositorioInventario>();
 builder.Services.AddScoped<RepositorioProductos>();
 builder.Services.AddScoped<RepositorioProveedores>();
+builder.Services.AddScoped<RepositorioProducto_Proveedor>();
 
 
 var app = builder.Build();
@@ -44,3 +46,5 @@ app.MapRazorComponents<App>()
     .AddAdditionalAssemblies(typeof(TDB.Client._Imports).Assembly);
 
 app.Run();
+
+ }

@@ -30,18 +30,15 @@ private Proveedores proveedor = new Proveedores();
 
     private async Task Guardar()
     {
-        if (editContext.Validate())
+        try
         {
             await _repositorio.Add(proveedor);
             _navigator.NavigateTo("/proveedores");
         }
-    }
-
-    private EditContext editContext;
-
-    protected override void OnInitialized()
-    {
-        editContext = new EditContext(proveedor);
+catch (Exception)
+        {
+            _navigator.NavigateTo("/error");
+        }
     }
 
 }
